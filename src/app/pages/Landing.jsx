@@ -8,18 +8,50 @@ const COURSE_ICONS = {
   "Google docs/sheets with AI": "🧠",
 };
 
-const FEATURES = [
-  { icon: "🎯", title: "Project-first learning", desc: "Every class ships something real — portfolios, campaigns, working sites." },
-  { icon: "👨‍🏫", title: "Mentors, not lecturers", desc: "Small batches with one-on-one feedback from working professionals." },
-  { icon: "🎥", title: "Lifetime recordings", desc: "Recorded lectures, notes and assignments — revisit anything, anytime." },
-  { icon: "🏆", title: "Completion certificate", desc: "Verified certificate at the end of every program." },
+const OFFERINGS = [
+  {
+    icon: "🎯",
+    title: "Project-first learning",
+    desc: "Build real portfolios, campaigns, and working websites instead of just reading theory.",
+  },
+  {
+    icon: "👨‍🏫",
+    title: "Mentor-led batches",
+    desc: "Small groups with direct feedback from professionals actively working in the field.",
+  },
+  {
+    icon: "🎥",
+    title: "Lifetime access to recordings",
+    desc: "Every lecture is recorded and stored so you can revisit lessons, notes, and assignments anytime.",
+  },
+  {
+    icon: "🏆",
+    title: "Verified certificate",
+    desc: "Receive a completion certificate at the end of your program to showcase your new skills.",
+  },
 ];
 
-const STATS = [
-  ["500+", "Students trained"],
-  ["4", "Industry tracks"],
-  ["12+", "Expert mentors"],
-  ["96%", "Course satisfaction"],
+const REGISTRATION_STEPS = [
+  {
+    n: "01",
+    title: "Fill the registration form",
+    desc: "Share your name, class, contact details, and the course you want to join.",
+  },
+  {
+    n: "02",
+    title: "Wait for admin review",
+    desc: "Our team checks seat availability and confirms your enrollment within 1–2 working days.",
+  },
+  {
+    n: "03",
+    title: "Get your account",
+    desc: "Once approved, we create your student or teacher login and assign your course.",
+  },
+  {
+    n: "04",
+    title: "Start learning",
+    desc: "Log in to access course material, assignments, recorded lectures, and updates.",
+  },
 ];
 
 export default function Landing() {
@@ -46,7 +78,7 @@ export default function Landing() {
               "radial-gradient(ellipse at top, black 30%, transparent 75%)",
           }}
         />
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:py-28">
+        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-20 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:py-28">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
@@ -66,9 +98,9 @@ export default function Landing() {
               .
             </h1>
             <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Short, hands-on programs in modern tech & marketing — taught live at
-              Learn Smart Academy, backed by structured online material,
-              assignments and recorded lectures.
+              Short, hands-on programs in modern tech and marketing — taught live at
+              Learn Smart Academy with structured online material, assignments, and
+              recorded lectures.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -85,14 +117,6 @@ export default function Landing() {
                 Student / Teacher Login
               </Link>
             </div>
-            <dl className="mt-10 grid max-w-lg grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-4">
-              {STATS.map(([v, l]) => (
-                <div key={l}>
-                  <dt className="text-2xl font-bold text-foreground sm:text-3xl">{v}</dt>
-                  <dd className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">{l}</dd>
-                </div>
-              ))}
-            </dl>
           </div>
 
           {/* Hero visual card */}
@@ -125,7 +149,7 @@ export default function Landing() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-semibold text-foreground">{c.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">{c.duration} · {c.fee}</div>
+                      <div className="truncate text-xs text-muted-foreground">{c.duration}</div>
                     </div>
                     <span className="text-xs text-primary">Live</span>
                   </div>
@@ -136,22 +160,22 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Why us */}
+      {/* What we offer */}
       <section className="mx-auto max-w-6xl px-4 py-20">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <span className="text-xs font-medium uppercase tracking-wider text-primary">Why Learn Smart</span>
+            <span className="text-xs font-medium uppercase tracking-wider text-primary">What we offer</span>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Built like a studio, not a classroom.
             </h2>
           </div>
           <p className="max-w-md text-sm text-muted-foreground">
             We train students the way modern teams actually work — fast feedback,
-            real briefs and tools you'll use on day one of a job.
+            real briefs, and tools you'll use on day one.
           </p>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map((f) => (
+          {OFFERINGS.map((f) => (
             <div
               key={f.title}
               className="group rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg"
@@ -206,16 +230,10 @@ export default function Landing() {
                   <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-foreground">{c.name}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">{c.description}</p>
+                    <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs text-secondary-foreground">
+                      ⏱ {c.duration}
+                    </div>
                   </div>
-                </div>
-                <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-full bg-secondary px-2.5 py-1 text-secondary-foreground">⏱ {c.duration}</span>
-                    <span className="rounded-full bg-secondary px-2.5 py-1 text-secondary-foreground">💳 {c.fee}</span>
-                  </div>
-                  <Link to="/register" className="text-sm font-medium text-primary opacity-0 transition group-hover:opacity-100">
-                    Enroll →
-                  </Link>
                 </div>
               </article>
             ))}
@@ -223,35 +241,109 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="mx-auto max-w-6xl px-4 py-20">
-        <div className="text-center">
-          <span className="text-xs font-medium uppercase tracking-wider text-primary">Get started</span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            How Registration Works
-          </h2>
+      {/* Fees */}
+      <section id="fees" className="mx-auto max-w-6xl px-4 py-20">
+        <div className="max-w-2xl">
+          <span className="text-xs font-medium uppercase tracking-wider text-primary">Pricing</span>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Course Fees</h2>
+          <p className="mt-2 text-muted-foreground">
+            Transparent pricing for every program. Pick a course and register to reserve your seat.
+          </p>
         </div>
-        <ol className="relative mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["01", "Fill the form", "Submit your details on our registration page."],
-            ["02", "Admin review", "Our team reviews your request and seat availability."],
-            ["03", "Account created", "Admin creates your login and assigns your course."],
-            ["04", "Start learning", "Log in to access material, assignments & lectures."],
-          ].map(([n, t, d]) => (
-            <li
-              key={n}
-              className="relative rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40"
+        <div className="mt-10 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-border bg-secondary/60">
+                  <th className="px-6 py-4 font-semibold text-foreground">Course</th>
+                  <th className="px-6 py-4 font-semibold text-foreground">Duration</th>
+                  <th className="px-6 py-4 font-semibold text-foreground">Fee</th>
+                  <th className="px-6 py-4 text-right font-semibold text-foreground">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COURSES.map((c, idx) => (
+                  <tr
+                    key={c.id}
+                    className={idx !== COURSES.length - 1 ? "border-b border-border" : ""}
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <span className="grid h-9 w-9 place-items-center rounded-lg bg-secondary text-lg">
+                          {COURSE_ICONS[c.id] || "📚"}
+                        </span>
+                        <span className="font-medium text-foreground">{c.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-muted-foreground">{c.duration}</td>
+                    <td className="px-6 py-4 font-semibold text-foreground">{c.fee}</td>
+                    <td className="px-6 py-4 text-right">
+                      <Link
+                        to="/register"
+                        className="inline-flex rounded-md bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition hover:opacity-90"
+                      >
+                        Register
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* How to register */}
+      <section className="relative">
+        <div className="absolute inset-0 -z-10 bg-secondary/30" />
+        <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="text-center">
+            <span className="text-xs font-medium uppercase tracking-wider text-primary">Get started</span>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              How to Register
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+              Four simple steps from application to your first lecture.
+            </p>
+          </div>
+          <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {/* connector line on large screens */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-0 right-0 top-[2.25rem] hidden h-0.5 lg:block"
+              style={{
+                background:
+                  "linear-gradient(90deg, color-mix(in oklab, var(--primary) 30%, transparent), color-mix(in oklab, var(--accent) 30%, transparent))",
+              }}
+            />
+            {REGISTRATION_STEPS.map((s) => (
+              <div
+                key={s.n}
+                className="relative rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40"
+              >
+                <div
+                  className="relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background text-sm font-bold text-primary shadow-sm lg:mx-0"
+                >
+                  {s.n}
+                </div>
+                <h4 className="mt-5 text-center font-semibold text-foreground lg:text-left">{s.title}</h4>
+                <p className="mt-2 text-center text-sm text-muted-foreground lg:text-left">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Link
+              to="/register"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
             >
-              <div className="text-3xl font-bold tracking-tight text-primary/30">{n}</div>
-              <h4 className="mt-2 font-semibold text-foreground">{t}</h4>
-              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
-            </li>
-          ))}
-        </ol>
+              Start your registration →
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-6xl px-4 pb-20">
+      <section className="mx-auto max-w-6xl px-4 py-20">
         <div
           className="relative overflow-hidden rounded-3xl border border-border p-10 text-center sm:p-14"
           style={{
