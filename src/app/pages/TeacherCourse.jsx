@@ -8,7 +8,7 @@ import {
 } from "../../backend/teacherService";
 import { getCourseContent } from "../../backend/contentService";
 import { getCourseMeta } from "../../backend/courseConstants";
-import { isValidUrl, youtubeIdFromUrl } from "../../backend/helpers";
+import { assertCourseId } from "../../backend/security";
 
 const UPLOAD_TABS = [
   { key: "Learning Material", label: "Learning Material", linkLabel: "Google Drive Link" },
@@ -19,7 +19,7 @@ const UPLOAD_TABS = [
 export default function TeacherCourse() {
   const { courseId: rawId } = useParams();
   const courseId = decodeURIComponent(rawId);
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const meta = getCourseMeta(courseId);
 
   const [tab, setTab] = useState("Learning Material");
@@ -33,10 +33,16 @@ export default function TeacherCourse() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const assigned = await getAssignedCourses(user.uid);
-      setAllowed(assigned.includes(courseId));
+      try {
+        if (role !== "teacher") { setAllowed(false); return; }
+        assertCourseId(courseId);
+        const assigned = await getAssignedCourses(user.uid);
+        setAllowed(assigned.includes(courseId));
+      } catch {
+        setAllowed(false);
+      }
     })();
-  }, [user, courseId]);
+  }, [user, role, courseId]);
 
   async function refresh() {
     const data = await getCourseContent(courseId);
@@ -50,21 +56,15 @@ export default function TeacherCourse() {
   async function onUpload(e) {
     e.preventDefault();
     setMsg({ state: "idle", text: "" });
-    if (!form.title.trim()) return setMsg({ state: "error", text: "Title required." });
-    if (!isValidUrl(form.link)) return setMsg({ state: "error", text: "Provide a valid URL." });
-    if (tab === "Recorded Lectures" && !youtubeIdFromUrl(form.link)) {
-      return setMsg({ state: "error", text: "Provide a valid YouTube link." });
-    }
-
     setMsg({ state: "loading", text: "" });
     try {
       await uploadContent({
-        uid: user.uid,
+        user,
         course: courseId,
         type: tab,
-        title: form.title.trim(),
-        description: form.description.trim(),
-        link: form.link.trim(),
+        title: form.title,
+        description: form.description,
+        link: form.link,
       });
       setForm({ title: "", description: "", link: "" });
       setMsg({ state: "success", text: "Uploaded successfully." });
@@ -76,8 +76,13 @@ export default function TeacherCourse() {
 
   async function loadStudents() {
     setShowStudents(true);
-    const list = await getEnrolledStudentsForCourse(courseId);
-    setStudents(list);
+    try {
+      const list = await getEnrolledStudentsForCourse(user, courseId);
+      setStudents(list);
+    } catch (e) {
+      setStudents([]);
+      setMsg({ state: "error", text: e?.message || "Failed to load students." });
+    }
   }
 
   if (allowed === null) return <div className="p-10 text-muted-foreground">Loading…</div>;

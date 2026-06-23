@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
-import { getEnrolledCourses } from "../../backend/studentService";
+import { getEnrolledCourses, assertEnrolled } from "../../backend/studentService";
 import { getCourseContent } from "../../backend/contentService";
 import { getCourseMeta } from "../../backend/courseConstants";
+import { assertCourseId } from "../../backend/security";
 import { youtubeIdFromUrl } from "../../backend/helpers";
 
 const TABS = [
@@ -15,7 +16,7 @@ const TABS = [
 export default function StudentCourse() {
   const { courseId: rawId } = useParams();
   const courseId = decodeURIComponent(rawId);
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const meta = getCourseMeta(courseId);
 
   const [tab, setTab] = useState("material");
@@ -28,12 +29,9 @@ export default function StudentCourse() {
     (async () => {
       setLoading(true);
       try {
-        const enrolled = await getEnrolledCourses(user.uid);
-        if (!enrolled.includes(courseId)) {
-          setError("You are not enrolled in this course.");
-          setLoading(false);
-          return;
-        }
+        if (role !== "student") throw new Error("Only students can view this page.");
+        assertCourseId(courseId);
+        await assertEnrolled(user, courseId);
         const data = await getCourseContent(courseId);
         setContent(data);
       } catch (e) {
@@ -42,7 +40,7 @@ export default function StudentCourse() {
         setLoading(false);
       }
     })();
-  }, [user, courseId]);
+  }, [user, role, courseId]);
 
   if (loading) return <div className="p-10 text-muted-foreground">Loading…</div>;
   if (error)
