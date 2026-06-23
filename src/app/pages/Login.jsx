@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../backend/authService";
+import { loginUser, logoutUser } from "../../backend/authService";
 import { useAuth } from "../AuthContext";
 
 export default function Login() {
@@ -9,12 +9,18 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     if (loading || !user) return;
     if (role === "student") navigate("/student", { replace: true });
     else if (role === "teacher") navigate("/teacher", { replace: true });
-  }, [user, role, loading, navigate]);
+    else if (checking) {
+      setErr("This account is not registered for Learn Smart Academy. Please contact the admin.");
+      setChecking(false);
+      logoutUser().catch(() => {});
+    }
+  }, [user, role, loading, navigate, checking]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -22,7 +28,8 @@ export default function Login() {
     setBusy(true);
     try {
       await loginUser(form.email.trim(), form.password);
-      // useEffect above will route
+      setChecking(true);
+      // useEffect above will route or surface an access error
     } catch (e) {
       setErr(e?.message || "Login failed.");
     } finally {
