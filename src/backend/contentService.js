@@ -1,8 +1,11 @@
 import { ref, get } from "firebase/database";
 import { db } from "./firebase";
 import { objToList } from "./helpers";
+import { assertCourseId, assertContentType } from "./security";
 
 async function fetchType(course, type) {
+  assertCourseId(course);
+  assertContentType(type);
   const snap = await get(ref(db, `subject/LearnSmart/${course}/${type}`));
   if (!snap.exists()) return [];
   return objToList(snap.val()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
@@ -13,6 +16,7 @@ export const fetchAssignments = (course) => fetchType(course, "Assignments");
 export const fetchLectures = (course) => fetchType(course, "Recorded Lectures");
 
 export async function getCourseContent(course) {
+  assertCourseId(course);
   const [material, assignments, lectures] = await Promise.all([
     fetchLearningMaterial(course),
     fetchAssignments(course),
