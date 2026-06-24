@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { submitRegistration } from "../../lib/sheets.functions";
 import { COURSES } from "../../backend/courseConstants";
+import { db } from "../../backend/firebase";
+import { ref, push, serverTimestamp } from "firebase/database";
 
 export default function Register() {
-  const submit = useServerFn(submitRegistration);
   const [form, setForm] = useState({
     name: "",
     studentClass: "",
@@ -25,7 +24,23 @@ export default function Register() {
     e.preventDefault();
     setStatus({ state: "loading", msg: "" });
     try {
-      await submit({ data: form });
+      const name = form.name.trim();
+      const studentClass = form.studentClass.trim();
+      const email = form.email.trim();
+      const phone = form.phone.trim();
+      if (!name || name.length > 100) throw new Error("Name is required (max 100).");
+      if (!studentClass || studentClass.length > 50) throw new Error("Class is required.");
+      if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 200) throw new Error("Valid email required.");
+      if (!/^[+\d\s\-()]{7,20}$/.test(phone)) throw new Error("Valid phone required.");
+      if (form.courses.length === 0) throw new Error("Select at least one course.");
+      await push(ref(db, "registrations"), {
+        name,
+        studentClass,
+        email,
+        phone,
+        courses: form.courses,
+        createdAt: serverTimestamp(),
+      });
       setStatus({ state: "success", msg: "Registration submitted! Our admin team will contact you shortly." });
       setForm({ name: "", studentClass: "", email: "", phone: "", courses: [] });
     } catch (err) {
