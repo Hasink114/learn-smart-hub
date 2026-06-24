@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { COURSES } from "../../backend/courseConstants";
-import { db } from "../../backend/firebase";
-import { ref, push, serverTimestamp } from "firebase/database";
+
+const SHEETS_WEBHOOK_URL =
+  "https://script.google.com/macros/s/AKfycbw8NKJbKbjyy54GlePDOtAK9ODPNG_d8dOvCdJq2jVj57RVo6F8egDjlratwsNgAL28/exec";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -33,13 +34,17 @@ export default function Register() {
       if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 200) throw new Error("Valid email required.");
       if (!/^[+\d\s\-()]{7,20}$/.test(phone)) throw new Error("Valid phone required.");
       if (form.courses.length === 0) throw new Error("Select at least one course.");
-      await push(ref(db, "registrations"), {
-        name,
-        studentClass,
-        email,
-        phone,
-        courses: form.courses,
-        createdAt: serverTimestamp(),
+      // Use text/plain to avoid a CORS preflight to Apps Script.
+      await fetch(SHEETS_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          name,
+          studentClass,
+          email,
+          phone,
+          courses: form.courses,
+        }),
       });
       setStatus({ state: "success", msg: "Registration submitted! Our admin team will contact you shortly." });
       setForm({ name: "", studentClass: "", email: "", phone: "", courses: [] });
