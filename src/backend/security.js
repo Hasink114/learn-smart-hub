@@ -36,6 +36,8 @@ export function requireRole(authState, expected) {
 }
 
 export function assertCourseId(courseId) {
+  console.log("[DEBUG assertCourseId] checking courseId:", courseId);
+  console.log("[DEBUG assertCourseId] COURSE_IDS:", COURSE_IDS);
   if (typeof courseId !== "string" || !COURSE_IDS.includes(courseId)) {
     throw new SecurityError("Unknown course.");
   }

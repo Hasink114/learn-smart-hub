@@ -33,5 +33,5 @@ export function objToList(obj) {
 
 export function trueKeys(obj) {
   if (!obj) return [];
-  return Object.keys(obj).filter((k) => obj[k] === true);
+  return Object.keys(obj).filter((k) => obj[k] === true).map((k) => k.trim().replace(/^["']|["']$/g, ""));
 }

@@ -18,7 +18,7 @@ const UPLOAD_TABS = [
 
 export default function TeacherCourse() {
   const { courseId: rawId } = useParams();
-  const courseId = decodeURIComponent(rawId);
+  const courseId = decodeURIComponent(rawId).trim().replace(/^["']|["']$/g, "");
   const { user, role } = useAuth();
   const meta = getCourseMeta(courseId);
 

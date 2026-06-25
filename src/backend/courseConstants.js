@@ -17,8 +17,8 @@ export const COURSES = [
     duration: "2 Months",
   },
   {
-    id: "Basic Web development",
-    name: "Basic Web Development",
+    id: "Web Development",
+    name: "Web Development",
     description:
       "HTML, CSS, JavaScript and React fundamentals to build real responsive websites.",
     fee: "Rs. 7,000 / month",

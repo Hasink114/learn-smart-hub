@@ -6,8 +6,11 @@ import { requireAuth, assertCourseId, SecurityError } from "./security";
 export async function getEnrolledCourses(uid) {
   if (!uid) throw new SecurityError("Missing user.");
   const snap = await get(ref(db, `Students/${uid}/information/enrolledCourses`));
+  console.log("[DEBUG getEnrolledCourses] snap.val():", snap.val());
   if (!snap.exists()) return [];
-  return trueKeys(snap.val());
+  const keys = trueKeys(snap.val());
+  console.log("[DEBUG getEnrolledCourses] processed keys:", keys);
+  return keys;
 }
 
 export async function assertEnrolled(user, courseId) {

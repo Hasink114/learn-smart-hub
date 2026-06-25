@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { getEnrolledCourses, assertEnrolled } from "../../backend/studentService";
 import { getCourseContent } from "../../backend/contentService";
-import { getCourseMeta } from "../../backend/courseConstants";
+import { getCourseMeta, COURSES } from "../../backend/courseConstants";
 import { assertCourseId } from "../../backend/security";
 import { youtubeIdFromUrl } from "../../backend/helpers";
 
@@ -15,9 +15,13 @@ const TABS = [
 
 export default function StudentCourse() {
   const { courseId: rawId } = useParams();
-  const courseId = decodeURIComponent(rawId);
+  const courseId = decodeURIComponent(rawId).trim().replace(/^["']|["']$/g, "");
   const { user, role } = useAuth();
   const meta = getCourseMeta(courseId);
+  
+  console.log("[DEBUG StudentCourse] rawId:", rawId);
+  console.log("[DEBUG StudentCourse] courseId:", courseId);
+  console.log("[DEBUG StudentCourse] All hardcoded COURSES:", COURSES);
 
   const [tab, setTab] = useState("material");
   const [content, setContent] = useState(null);
